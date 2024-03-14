@@ -80,7 +80,7 @@ describe('<Truncate />', () => {
     describe('in a client environment', () => {
         before(() => {
             const { JSDOM } = jsdom;
-            const { document } = (new JSDOM('')).window;
+            const { document } = (new JSDOM('', { url: 'http://localhost' })).window;
             global.document = document;
             global.window = global.document.defaultView;
             global.window.requestAnimationFrame = requestAnimationFrame;
@@ -216,14 +216,11 @@ describe('<Truncate />', () => {
                     }
                 };
 
-                const component = renderIntoDocument(<Wrapper />);
+                const component = renderIntoBox(<Wrapper />);
 
-                expect(component, 'to contain', (
-                    <span>
-                        <span><Content /></span>
-                        <span><Content /></span>
-                    </span>
-                ));
+                expect(component, 'to display text', `
+                    Preserve this text as it was!
+                `);
             });
 
             it('should end truncating when a single word is bigger than its line', () => {
